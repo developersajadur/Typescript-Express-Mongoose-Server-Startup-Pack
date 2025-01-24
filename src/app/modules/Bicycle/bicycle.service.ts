@@ -1,20 +1,30 @@
-import { Bicycle } from './bicycle.interface';
+import QueryBuilder from '../../builders/QueryBuilder';
+import { bicycleSearchableFields } from './bicycle.constant';
+import { TBicycle } from './bicycle.interface';
 import { BicycleModel } from './bicycle.model';
 
-const createBicycleDb = async (bicycle: Bicycle) => {
+const createBicycleIntoDb = async (bicycle: TBicycle) => {
   const result = await BicycleModel.create(bicycle);
   return result;
 };
-const getAllBiCycle = async (filter = {}) => {
-  const result = await BicycleModel.find(filter);
-  return result;
-};
+const getAllBiCycle = async (query: Record<string, unknown>) => {
+  const biCycleQuery = new QueryBuilder(BicycleModel.find(), query)
+  .search(bicycleSearchableFields)
+  .filter()
+  .sort()
+  .paginate()
+  .fields();
+
+  const result = await biCycleQuery.modelQuery;
+  const meta = await biCycleQuery.countTotal();
+  return { data: result, meta };
+}
 const getSingleBiCycleById = async (_id: string) => {
   const result = await BicycleModel.findOne({ _id });
   return result;
 };
 
-const updateBiCycleById = async (_id: string, updatedBicycle: Bicycle) => {
+const updateSingleBiCycleById = async (_id: string, updatedBicycle: TBicycle) => {
   const result = await BicycleModel.findByIdAndUpdate(
     _id,
     { ...updatedBicycle, updatedAt: new Date() },
@@ -23,15 +33,17 @@ const updateBiCycleById = async (_id: string, updatedBicycle: Bicycle) => {
   return result;
 };
 
-const deleteBiCycleById = async (_id: string) => {
-  const result = await BicycleModel.findByIdAndDelete(_id);
+const deleteSingleBiCycleById = async (_id: string) => {
+  const result = await BicycleModel.findByIdAndUpdate(_id, {isDeleted: true, updatedAt: new Date()},
+    { new: true },
+  );
   return result;
 };
 
 export const BicycleService = {
-  createBicycleDb,
+  createBicycleIntoDb,
   getAllBiCycle,
   getSingleBiCycleById,
-  updateBiCycleById,
-  deleteBiCycleById,
+  updateSingleBiCycleById,
+  deleteSingleBiCycleById,
 };

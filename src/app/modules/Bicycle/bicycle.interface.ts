@@ -1,11 +1,20 @@
-export type Bicycle = {
+import { Types } from "mongoose";
+
+export type TBicycle = {
+  author: Types.ObjectId;
   name: string;
   brand: string;
   price: number;
-  type: string;
+  category: string;
   description: string;
-  quantity: number;
+  stockQuantity: number; 
   inStock: boolean;
-  createdAt?: string | unknown;
-  updatedAt?: string | unknown;
+  isDeleted: boolean;
+  images: string[];
+  videoUrl?: string,
+  colors: string[];
+  weight: number;
+  discount?: number;
+  createdAt?: Date | string; 
+  updatedAt?: Date | string;  
 };
