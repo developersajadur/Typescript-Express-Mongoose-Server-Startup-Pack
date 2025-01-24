@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import QueryBuilder from '../../builders/QueryBuilder';
+import AppError from '../../errors/AppError';
+import status from "http-status";
 import { bicycleSearchableFields } from './bicycle.constant';
 import { TBicycle } from './bicycle.interface';
 import { BicycleModel } from './bicycle.model';
@@ -8,7 +11,7 @@ const createBicycleIntoDb = async (bicycle: TBicycle) => {
   return result;
 };
 const getAllBiCycle = async (query: Record<string, unknown>) => {
-  const biCycleQuery = new QueryBuilder(BicycleModel.find(), query)
+  const biCycleQuery = new QueryBuilder(BicycleModel.find({ isDeleted: false}), query)
   .search(bicycleSearchableFields)
   .filter()
   .sort()
@@ -20,11 +23,23 @@ const getAllBiCycle = async (query: Record<string, unknown>) => {
   return { data: result, meta };
 }
 const getSingleBiCycleById = async (_id: string) => {
-  const result = await BicycleModel.findOne({ _id });
-  return result;
+  const bicycle = await BicycleModel.findOne({ _id, isDeleted: false });
+  if (!bicycle){
+    throw new AppError(status.BAD_REQUEST, 'Bicycle Not Found')
+  }
+  return bicycle;
 };
 
 const updateSingleBiCycleById = async (_id: string, updatedBicycle: TBicycle) => {
+  try {
+    const bicycle = await BicycleModel.findOne({ _id, isDeleted: false });
+    if (!bicycle){
+      throw new AppError(status.BAD_REQUEST, 'Bicycle Not Found')
+    }
+
+  } catch (error: any) {
+    throw new AppError(status.BAD_REQUEST, error.message)
+  }
   const result = await BicycleModel.findByIdAndUpdate(
     _id,
     { ...updatedBicycle, updatedAt: new Date() },
@@ -34,6 +49,15 @@ const updateSingleBiCycleById = async (_id: string, updatedBicycle: TBicycle) =>
 };
 
 const deleteSingleBiCycleById = async (_id: string) => {
+  try {
+    const bicycle = await BicycleModel.findOne({ _id, isDeleted: false });
+    if (!bicycle){
+      throw new AppError(status.BAD_REQUEST, 'Bicycle Not Found')
+    }
+
+  } catch (error: any) {
+    throw new AppError(status.BAD_REQUEST, error.message)
+  }
   const result = await BicycleModel.findByIdAndUpdate(_id, {isDeleted: true, updatedAt: new Date()},
     { new: true },
   );

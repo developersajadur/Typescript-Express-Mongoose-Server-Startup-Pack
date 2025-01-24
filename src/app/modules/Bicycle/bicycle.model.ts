@@ -1,4 +1,5 @@
-import { model, Schema } from 'mongoose';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import mongoose, { model, Schema } from 'mongoose';
 import { TBicycle } from './bicycle.interface';
 
 const BicycleSchema = new Schema<TBicycle>( {
@@ -74,13 +75,20 @@ const BicycleSchema = new Schema<TBicycle>( {
 
 // pre middleware
 
-// BicycleSchema.pre<Bicycle>('save', function (next) {
-//   // eslint-disable-next-line @typescript-eslint/no-this-alias
-//   const biCycle = this;
-//   biCycle.createdAt = new Date();
-//   biCycle.updatedAt = new Date();
+// Middleware to exclude deleted records
+BicycleSchema.pre(/^find/, function (this: mongoose.Query<any, any>, next) {
+  this.find({ isDeleted: false }); // Correct way to filter deleted items
+  next();
+});
 
-//   next();
-// });
+BicycleSchema.pre('aggregate', function (this: mongoose.Aggregate<any[]>, next) {
+  const pipeline = this.pipeline() as mongoose.PipelineStage[];
+
+  // Ensure $match isn't already added to avoid duplicates
+  if (!pipeline.some(stage => (stage as mongoose.PipelineStage.Match).$match)) {
+    this.pipeline().unshift({ $match: { isDeleted: false } });
+  }
+  next();
+});
 
 export const BicycleModel = model<TBicycle>('bicycle', BicycleSchema);
