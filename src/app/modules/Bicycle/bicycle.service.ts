@@ -25,7 +25,7 @@ const getAllBiCycle = async (query: Record<string, unknown>) => {
 const getSingleBiCycleById = async (_id: string) => {
   const bicycle = await BicycleModel.findOne({ _id, isDeleted: false });
   if (!bicycle){
-    throw new AppError(status.BAD_REQUEST, 'Bicycle Not Found')
+    throw new AppError(status.NOT_FOUND, 'Bicycle Not Found')
   }
   return bicycle;
 };
@@ -34,7 +34,7 @@ const updateSingleBiCycleById = async (_id: string, updatedBicycle: TBicycle) =>
   try {
     const bicycle = await BicycleModel.findOne({ _id, isDeleted: false });
     if (!bicycle){
-      throw new AppError(status.BAD_REQUEST, 'Bicycle Not Found')
+      throw new AppError(status.NOT_FOUND, 'Bicycle Not Found')
     }
 
   } catch (error: any) {
@@ -52,7 +52,7 @@ const deleteSingleBiCycleById = async (_id: string) => {
   try {
     const bicycle = await BicycleModel.findOne({ _id, isDeleted: false });
     if (!bicycle){
-      throw new AppError(status.BAD_REQUEST, 'Bicycle Not Found')
+      throw new AppError(status.NOT_FOUND, 'Bicycle Not Found')
     }
 
   } catch (error: any) {
