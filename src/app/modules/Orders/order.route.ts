@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.post('/placed-order',auth(USER_ROLE.customer), validateRequest(orderValidationSchema.createOrderValidation), orderController.createOrderIntoDb);
 router.get('/', auth(USER_ROLE.admin), orderController.getAllOrders);
+router.post('/change-order-status', auth(USER_ROLE.admin), validateRequest(orderValidationSchema.changeOrderStatusValidation), orderController.changeOrderStatus);
 router.get('/orders/revenue', orderController.showTotalRevenue);
 
 export const orderRoute = router;

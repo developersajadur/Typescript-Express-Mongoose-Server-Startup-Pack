@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { z } from 'zod';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import status from 'http-status';
 import { tokenDecoder } from '../Auth/auth.utils';
 import { v4 as uuidv4 } from 'uuid';
 import { orderService } from './order.service';
+import AppError from '../../errors/AppError';
 
 
 const createOrderIntoDb = catchAsync(async (req, res) => {
@@ -37,6 +37,24 @@ const getAllOrders = catchAsync(async (req, res) => {
 
 })
 
+const changeOrderStatus = catchAsync(async (req, res) => {
+  const { orderId, orderStatus } = req.body;
+  const result = await orderService.changeOrderStatus({orderId, orderStatus});
+  if(!result) {
+    throw new AppError(status.NOT_FOUND, 'Order not found')
+  }
+  const dataToSend = {
+    orderId: result._id,
+    orderStatus: result.status,
+  }
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: `Order ${orderStatus} successfully`,
+    data: dataToSend,
+  })
+})
+
 // showTotalRevenue
 
 const showTotalRevenue = async (req: Request, res: Response): Promise<void> => {
@@ -62,4 +80,5 @@ export const orderController = {
   createOrderIntoDb,
   showTotalRevenue,
   getAllOrders,
+  changeOrderStatus
 };

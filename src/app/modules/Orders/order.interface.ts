@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 
-export type TOrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+export type TOrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'returned';
 
 export type TOrderItem = {
   productId: Types.ObjectId;
@@ -30,4 +30,10 @@ export type TOrder = {
   paidAt?: Date;
   createdAt: Date;
   updatedAt: Date;
+}
+
+
+export type TStatus = {
+  orderId: Types.ObjectId;
+  orderStatus: TOrderStatus;
 }

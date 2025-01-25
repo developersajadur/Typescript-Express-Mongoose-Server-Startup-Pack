@@ -17,7 +17,7 @@ const OrderSchema = new Schema<TOrder>(
     paymentMethod: { type: String, enum: ['stripe', 'cash_on_delivery'], required: true },
     status: {
       type: String,
-      enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+      enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'returned'],
       default: 'pending',
     },
     shippingAddress: {

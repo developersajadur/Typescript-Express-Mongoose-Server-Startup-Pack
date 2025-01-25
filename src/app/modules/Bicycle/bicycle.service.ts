@@ -22,6 +22,8 @@ const getAllBiCycle = async (query: Record<string, unknown>) => {
   const meta = await biCycleQuery.countTotal();
   return { data: result, meta };
 }
+
+
 const getSingleBiCycleById = async (_id: string) => {
   const bicycle = await BicycleModel.findOne({ _id, isDeleted: false }).populate('author');
   if (!bicycle){
@@ -29,6 +31,8 @@ const getSingleBiCycleById = async (_id: string) => {
   }
   return bicycle;
 };
+
+
 
 const updateSingleBiCycleById = async (_id: string, updatedBicycle: TBicycle) => {
   try {

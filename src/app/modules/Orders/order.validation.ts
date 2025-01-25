@@ -8,7 +8,7 @@ export const orderItemValidation = z.object({
 });
 
 // Zod validation for Order
-export const createOrderValidation = z.object({
+ const createOrderValidation = z.object({
   body: z.object({
     userId: z.string(),
     items: z.array(orderItemValidation).min(1, { message: 'At least one item is required' }),
@@ -32,8 +32,16 @@ export const createOrderValidation = z.object({
   })
 });
 
+ const changeOrderStatusValidation = z.object({
+  body: z.object({
+    orderId: z.string(),
+    orderStatus: z.enum(['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'returned'], { message: 'Invalid order status' }),
+  })
+})
+
 
 
 export const orderValidationSchema = {
-  createOrderValidation
+  createOrderValidation,
+  changeOrderStatusValidation
 };
