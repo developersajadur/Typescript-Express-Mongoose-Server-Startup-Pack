@@ -11,9 +11,9 @@ export type TOrderItem = {
 export type TOrder = {
   userId: Types.ObjectId;
   items: TOrderItem[];
-  totalAmount: number;
+  totalAmount?: number;
   discount?: number;
-  finalAmount: number;
+  finalAmount?: number;
   paymentMethod: 'stripe' | 'cash_on_delivery';
   status: TOrderStatus;
   shippingAddress: {

@@ -4,7 +4,7 @@
 import status from "http-status";
 import AppError from "../errors/AppError";
 import catchAsync from "../utils/catchAsync"
-import { verifyToken } from "../modules/Auth/auth.utils";
+import { tokenDecoder, verifyToken } from "../modules/Auth/auth.utils";
 import config from "../config";
 import { UserModel } from "../modules/User/user.model";
 import { TUserRole } from "../modules/User/user.interface";
@@ -14,13 +14,8 @@ import { NextFunction, Request, Response } from "express";
 
 const auth = (...requiredRoles: TUserRole[]) => {
     return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-        const token = req.headers.authorization;
-        if(!token){
-            throw new AppError(status.UNAUTHORIZED, 'You are not authorized!')
-        }
-        const decoded = verifyToken(token, config.jwt_token_secret as string)
-      
-        const { role, userId, iat } = decoded;
+        const decoded = tokenDecoder(req)
+        const { role, userId } = decoded;
         const user:any = UserModel.findById(userId)
         if(!user){
             throw new AppError(status.UNAUTHORIZED, 'User not found!')

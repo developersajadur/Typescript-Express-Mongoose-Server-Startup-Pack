@@ -1,11 +1,11 @@
 import { Types } from "mongoose";
 
 export type TBicycle = {
-  author: Types.ObjectId;
+  author?: Types.ObjectId;
   name: string;
   brand: string;
   price: number;
-  category: string;
+  category:  string[];
   description: string;
   stockQuantity: number; 
   inStock: boolean;
@@ -14,7 +14,7 @@ export type TBicycle = {
   videoUrl?: string,
   colors: string[];
   weight: number;
-  discount?: number;
+  discount: number;
   createdAt?: Date | string; 
   updatedAt?: Date | string;  
 };

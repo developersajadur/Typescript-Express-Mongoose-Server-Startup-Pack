@@ -2,11 +2,14 @@ import status from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import { BicycleService } from "./bicycle.service";
 import sendResponse from "../../utils/sendResponse";
+import { tokenDecoder } from "../Auth/auth.utils";
 
 
 
 const createBicycle = catchAsync(async (req, res) => {
-  const userId = '6793b2723cf70fc0aa85f4ab'
+
+  const decoded = tokenDecoder(req)
+  const { userId } = decoded;
   const bicycle = req.body;
   const dataToStore = { ...bicycle, author: userId };
   const result = await BicycleService.createBicycleIntoDb(dataToStore)

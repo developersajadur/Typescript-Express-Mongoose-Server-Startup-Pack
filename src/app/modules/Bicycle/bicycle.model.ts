@@ -5,7 +5,6 @@ import { TBicycle } from './bicycle.interface';
 const BicycleSchema = new Schema<TBicycle>( {
   author: {
     type: Schema.Types.ObjectId,
-    required: true,
     ref: 'User',
   },
   name: {
@@ -24,7 +23,7 @@ const BicycleSchema = new Schema<TBicycle>( {
     min: 0,
   },
   category: {
-    type: String,
+    type: [String],
     required: true,
     trim: true,
   },
@@ -41,6 +40,7 @@ const BicycleSchema = new Schema<TBicycle>( {
   inStock: {
     type: Boolean,
     required: true,
+    default: true
   },
   isDeleted: {
     type: Boolean,
