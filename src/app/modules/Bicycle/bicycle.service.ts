@@ -11,7 +11,7 @@ const createBicycleIntoDb = async (bicycle: TBicycle) => {
   return result;
 };
 const getAllBiCycle = async (query: Record<string, unknown>) => {
-  const biCycleQuery = new QueryBuilder(BicycleModel.find({ isDeleted: false}), query)
+  const biCycleQuery = new QueryBuilder(BicycleModel.find({ isDeleted: false}).populate('author'), query)
   .search(bicycleSearchableFields)
   .filter()
   .sort()
@@ -23,7 +23,7 @@ const getAllBiCycle = async (query: Record<string, unknown>) => {
   return { data: result, meta };
 }
 const getSingleBiCycleById = async (_id: string) => {
-  const bicycle = await BicycleModel.findOne({ _id, isDeleted: false });
+  const bicycle = await BicycleModel.findOne({ _id, isDeleted: false }).populate('author');
   if (!bicycle){
     throw new AppError(status.NOT_FOUND, 'Bicycle Not Found')
   }

@@ -1,6 +1,7 @@
 
 export const userSearchableFields = ['name', 'email']
 
-export const role = {
-    USER: 'user',
-}
+export const USER_ROLE = {
+    customer: 'customer',
+    admin: 'admin',
+} as const

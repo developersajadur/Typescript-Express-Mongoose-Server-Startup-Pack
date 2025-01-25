@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const loginValidationSchema = z.object({
+const loginUserValidation = z.object({
   body: z.object({
     email: z
       .string({ required_error: 'Email is required.' })
@@ -9,6 +9,6 @@ const loginValidationSchema = z.object({
   }),
 });
 
-export const AuthValidation = {
-    loginValidationSchema,
+export const AuthValidationSchema = {
+  loginUserValidation,
   };

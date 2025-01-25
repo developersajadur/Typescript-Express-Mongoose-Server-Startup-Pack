@@ -52,5 +52,5 @@ const userSchema = new Schema<TUser>(
 
 
   // Create the Mongoose model
- export const UserModel = model<TUser>('user', userSchema);
+ export const UserModel = model<TUser>('User', userSchema);
   

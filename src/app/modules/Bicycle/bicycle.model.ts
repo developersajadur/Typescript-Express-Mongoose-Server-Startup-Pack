@@ -6,6 +6,7 @@ const BicycleSchema = new Schema<TBicycle>( {
   author: {
     type: Schema.Types.ObjectId,
     required: true,
+    ref: 'User',
   },
   name: {
     type: String,
@@ -91,4 +92,4 @@ BicycleSchema.pre('aggregate', function (this: mongoose.Aggregate<any[]>, next) 
   next();
 });
 
-export const BicycleModel = model<TBicycle>('bicycle', BicycleSchema);
+export const BicycleModel = model<TBicycle>('Bicycle', BicycleSchema);
