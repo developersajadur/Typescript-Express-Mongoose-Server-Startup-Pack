@@ -25,7 +25,7 @@ const createUserIntoDb = async (user: TUser) => {
     }
   };
   
-
+ 
 const getAllUsers = async (query: Record<string, unknown>) => {
     const userQuery = new QueryBuilder(UserModel.find(), query)
     .search(userSearchableFields)

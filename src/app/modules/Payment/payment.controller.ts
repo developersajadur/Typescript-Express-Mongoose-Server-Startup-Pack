@@ -9,7 +9,7 @@ const createPaymentIntoDb = catchAsync(async (req, res) => {
 
     const decoded = tokenDecoder(req)
     const {userId} = decoded
-
+ 
     const dataToStore = {
         userId,
        ...req.body,
@@ -24,7 +24,18 @@ const createPaymentIntoDb = catchAsync(async (req, res) => {
     })
 })
 
+const getAllPayments = catchAsync(async (req, res) => {
+    const payments =  await paymentService.getAllPayments(req.query)
+    sendResponse(res, {
+        statusCode: status.OK,
+        success: true,
+        message: 'Payments retrieved successfully',
+        data: payments,
+    })
+})
+
 
 export const paymentController = {
     createPaymentIntoDb,
+    getAllPayments
 }

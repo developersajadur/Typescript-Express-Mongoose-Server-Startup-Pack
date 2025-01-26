@@ -22,7 +22,7 @@ const createUserIntoDb = catchAsync(async (req, res) => {
 })
 
 const getAllUsers = catchAsync(async (req, res) => {
-    const users = await userService.getAllUsers(req?.body)
+    const users = await userService.getAllUsers(req?.query)
     sendResponse(res, {
         statusCode: status.OK,
         success: true,

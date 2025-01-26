@@ -9,6 +9,7 @@ import QueryBuilder from '../../builders/QueryBuilder';
 import { allowedTransitions } from './order.utils';
 
 const createOrderIntoDb = async (order: TOrder) => {
+  if(order.paymentMethod === 'cash_on_delivery'){
   try {
     // Initialize total amount and discount
     let totalAmount = 0;
@@ -60,6 +61,8 @@ const createOrderIntoDb = async (order: TOrder) => {
   } catch (error: any) {
     throw new AppError(status.BAD_REQUEST, error.message);
   }
+}
+
 };
 
 

@@ -26,7 +26,7 @@ const createOrderIntoDb = catchAsync(async (req, res) => {
 // show all orders
 
 const getAllOrders = catchAsync(async (req, res) => {
-  const orders = await req?.body;
+  const orders =  req?.query;
   const result = await orderService.getAllOrder(orders)
   sendResponse(res, {
     statusCode: status.OK,
