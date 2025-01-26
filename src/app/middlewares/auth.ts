@@ -4,8 +4,7 @@
 import status from "http-status";
 import AppError from "../errors/AppError";
 import catchAsync from "../utils/catchAsync"
-import { tokenDecoder, verifyToken } from "../modules/Auth/auth.utils";
-import config from "../config";
+import { tokenDecoder } from "../modules/Auth/auth.utils";
 import { UserModel } from "../modules/User/user.model";
 import { TUserRole } from "../modules/User/user.interface";
 import { JwtPayload } from "jsonwebtoken";

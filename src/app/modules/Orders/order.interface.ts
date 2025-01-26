@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 
 export type TOrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'returned';
+export type TPaymentMethod = 'stripe' | 'aamar_pay' | 'cash_on_delivery';
 
 export type TOrderItem = {
   productId: Types.ObjectId;
@@ -14,7 +15,7 @@ export type TOrder = {
   totalAmount?: number;
   discount?: number;
   finalAmount?: number;
-  paymentMethod: 'stripe' | 'cash_on_delivery';
+  paymentMethod: TPaymentMethod;
   status: TOrderStatus;
   shippingAddress: {
     fullName: string;

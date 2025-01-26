@@ -18,7 +18,7 @@ const createOrderIntoDb = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: status.OK,
     success: true,
-    message: 'Order Placed successfully',
+    message: 'Order Placed successfully', 
     data: result,
   })
 })
@@ -36,6 +36,21 @@ const getAllOrders = catchAsync(async (req, res) => {
   })
 
 })
+
+
+
+const getSingleOrderById = catchAsync(async (req, res) => {
+  const order = await orderService.getSingleOrderById(req.params?.id)
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'Order retrieved successfully',
+    data: order
+  })
+})
+
+
+
 
 const changeOrderStatus = catchAsync(async (req, res) => {
   const { orderId, orderStatus } = req.body;
@@ -80,5 +95,6 @@ export const orderController = {
   createOrderIntoDb,
   showTotalRevenue,
   getAllOrders,
-  changeOrderStatus
+  changeOrderStatus,
+  getSingleOrderById
 };

@@ -11,6 +11,12 @@ const userSchema = new Schema<TUser>(
         required: [true, 'Name is required'],
         trim: true,
       },
+      number: {
+        type: String,
+        required: [true, 'Number is required'],
+        match: [/^\d{11}$/, 'Invalid phone number format'],  // Optional: Validate 11-digit numbers
+      },
+      
       email: {
         type: String,
         required: [true, 'Email is required'],

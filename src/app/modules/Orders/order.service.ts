@@ -78,6 +78,19 @@ const getAllOrder = async (query: Record<string, unknown>) => {
   return { result, meta };
 };
 
+
+
+const getSingleOrderById = async (_id: string) => {
+  const order = await OrderModel.findOne({ _id }).populate('items.productId').populate('userId');
+  if (!order){
+    throw new AppError(status.NOT_FOUND, 'Order Not Found')
+  }
+  return order;
+};
+
+
+
+// change status of a order
 const changeOrderStatus = async(statusPayload: TStatus) => {
   const order = await OrderModel.findById(statusPayload?.orderId)
   if (!order) {
@@ -108,4 +121,5 @@ export const orderService = {
   showTotalRevenue,
   getAllOrder,
   changeOrderStatus,
+  getSingleOrderById
 };

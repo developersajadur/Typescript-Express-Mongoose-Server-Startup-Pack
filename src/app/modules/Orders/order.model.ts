@@ -7,14 +7,14 @@ const OrderItemSchema = new Schema<TOrderItem>({
   color: { type: String },
 });
 
-const OrderSchema = new Schema<TOrder>(
+const orderSchema = new Schema<TOrder>(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     items: [OrderItemSchema],
     totalAmount: { type: Number, required: true, default: 0 },
     discount: { type: Number, default: 0 },
     finalAmount: { type: Number, required: true, default: 0  }, 
-    paymentMethod: { type: String, enum: ['stripe', 'cash_on_delivery'], required: true },
+    paymentMethod: { type: String, enum: ['stripe', 'aamar_pay', 'cash_on_delivery'], required: true },
     status: {
       type: String,
       enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'returned'],
@@ -36,5 +36,5 @@ const OrderSchema = new Schema<TOrder>(
   { timestamps: true }
 );
 
-export const OrderModel = model<TOrder>('Order', OrderSchema)
+export const OrderModel = model<TOrder>('Order', orderSchema)
 

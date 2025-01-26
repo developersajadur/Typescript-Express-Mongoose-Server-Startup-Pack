@@ -15,7 +15,7 @@ export const orderItemValidation = z.object({
     totalAmount: z.number().positive({ message: 'Total amount must be a positive number' }).default(0).optional(),
     discount: z.number().min(0, { message: 'Discount must be a non-negative number' }).default(0).optional(),
     finalAmount: z.number().positive({ message: 'Final amount must be a positive number' }).default(0).optional(),
-    paymentMethod: z.enum(['stripe', 'cash_on_delivery'], { message: 'Invalid payment method' }),
+    paymentMethod: z.enum(['stripe','aamar_pay', 'cash_on_delivery'], { message: 'Invalid payment method' }),
     status: z.enum(['pending', 'processing', 'shipped', 'delivered', 'cancelled'], { message: 'Invalid order status' }).default('pending'),
     shippingAddress: z.object({
       fullName: z.string().min(1, { message: 'Full name is required' }),

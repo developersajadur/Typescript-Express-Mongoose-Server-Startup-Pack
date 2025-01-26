@@ -10,6 +10,7 @@ const createUserIntoDb = catchAsync(async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        number: user.number,
         role: user.role,
     }
     sendResponse(res, {
