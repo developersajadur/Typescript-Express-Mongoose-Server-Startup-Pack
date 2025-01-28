@@ -42,6 +42,16 @@ const getSingleBiCycleById = catchAsync(async (req, res) => {
   })
 })
 
+const getSingleBiCycleBySlug = catchAsync(async (req, res) => {
+  const bicycle = await BicycleService.getSingleBiCycleBySlug(req.params.slug)
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'Bicycle retrieved successfully',
+    data: bicycle
+  })
+})
+
 const updateSingleBiCycleById = catchAsync(async (req, res) => {
   const updatedBicycle = await BicycleService.updateSingleBiCycleById(req?.params?.id, req?.body)
   sendResponse(res, {
@@ -68,5 +78,6 @@ export const bicycleController = {
   getAllBiCycles,
   getSingleBiCycleById,
   updateSingleBiCycleById,
-  deleteSingleBiCycleById
+  deleteSingleBiCycleById,
+  getSingleBiCycleBySlug
 }

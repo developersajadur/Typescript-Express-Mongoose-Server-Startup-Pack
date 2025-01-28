@@ -9,7 +9,7 @@ const OrderItemSchema = new Schema<TOrderItem>({
 
 const orderSchema = new Schema<TOrder>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: Schema.Types.ObjectId, ref: 'User'},
     items: [OrderItemSchema],
     totalAmount: { type: Number, required: true, default: 0 },
     discount: { type: Number, default: 0 },

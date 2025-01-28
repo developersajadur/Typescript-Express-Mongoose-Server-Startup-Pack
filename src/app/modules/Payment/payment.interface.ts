@@ -14,7 +14,7 @@ export type TPaymentRequest = {
     userId?: Types.ObjectId;
     orderId: Types.ObjectId;
     amount: number;
-    transactionId: string;
+    transactionId?: string;
     paymentMethod: TPaymentMethod;
     currency: string;
     createdAt?: Date;

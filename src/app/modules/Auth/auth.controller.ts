@@ -5,7 +5,7 @@ import sendResponse from "../../utils/sendResponse";
 import { AuthServices } from "./auth.service";
 
 
-const loginUser = catchAsync(async (req, res) => {
+const loginUser = catchAsync(async (req, res) => { 
     const result = await AuthServices.loginUser(req?.body);
     const { token } = result;
     res.cookie('token', token, {
@@ -17,7 +17,7 @@ const loginUser = catchAsync(async (req, res) => {
     sendResponse(res, {
         statusCode: status.OK,
         success: true,
-        message: 'User is logged in successfully!',
+        message: 'Logged in successfully!',
         data: {token},
     })
 

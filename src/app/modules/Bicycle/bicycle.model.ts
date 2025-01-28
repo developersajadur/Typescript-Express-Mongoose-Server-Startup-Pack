@@ -12,6 +12,11 @@ const BicycleSchema = new Schema<TBicycle>( {
     required: true,
     trim: true,
   },
+  slug: {
+    type: String,
+    trim: true,
+    unique: true,
+  },
   brand: {
     type: String,
     required: true,

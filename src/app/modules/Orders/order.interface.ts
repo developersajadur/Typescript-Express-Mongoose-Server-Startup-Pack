@@ -10,7 +10,7 @@ export type TOrderItem = {
 }
 
 export type TOrder = {
-  userId: Types.ObjectId;
+  userId?: Types.ObjectId;
   items: TOrderItem[];
   totalAmount?: number;
   discount?: number;

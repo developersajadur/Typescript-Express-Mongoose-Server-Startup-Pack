@@ -3,6 +3,7 @@ import { Types } from "mongoose";
 export type TBicycle = {
   author?: Types.ObjectId;
   name: string;
+  slug?: string;
   brand: string;
   price: number;
   category:  string[];

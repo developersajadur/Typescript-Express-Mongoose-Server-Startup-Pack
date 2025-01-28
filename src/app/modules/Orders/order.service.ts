@@ -111,17 +111,16 @@ const changeOrderStatus = async(statusPayload: TStatus) => {
 }
 
 // Calculate total revenue from all orders
-const showTotalRevenue = async () => {
-  const totalRevenue = await OrderModel.aggregate([
-    { $group: { _id: null, totalRevenue: { $sum: '$totalPrice' } } },
-    { $project: { _id: 0, totalRevenue: 1 } },
-  ]);
-  return totalRevenue[0]?.totalRevenue || 0;
-};
+// const showTotalRevenue = async () => {
+//   const totalRevenue = await OrderModel.aggregate([
+//     { $group: { _id: null, totalRevenue: { $sum: '$totalPrice' } } },
+//     { $project: { _id: 0, totalRevenue: 1 } },
+//   ]);
+//   return totalRevenue[0]?.totalRevenue || 0;
+// };
 
 export const orderService = {
   createOrderIntoDb,
-  showTotalRevenue,
   getAllOrder,
   changeOrderStatus,
   getSingleOrderById

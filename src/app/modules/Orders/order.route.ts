@@ -11,6 +11,6 @@ router.post('/placed-order',auth(USER_ROLE.customer), validateRequest(orderValid
 router.get('/', auth(USER_ROLE.admin), orderController.getAllOrders);
 router.get('/:id', auth(USER_ROLE.admin), orderController.getSingleOrderById);
 router.post('/change-order-status', auth(USER_ROLE.admin), validateRequest(orderValidationSchema.changeOrderStatusValidation), orderController.changeOrderStatus);
-router.get('/orders/revenue', orderController.showTotalRevenue);
+// router.get('/orders/revenue', orderController.showTotalRevenue);
 
 export const orderRoute = router;

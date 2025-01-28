@@ -5,11 +5,24 @@ import status from "http-status";
 import { bicycleSearchableFields } from './bicycle.constant';
 import { TBicycle } from './bicycle.interface';
 import { BicycleModel } from './bicycle.model';
+import slugify from 'slugify'
 
 const createBicycleIntoDb = async (bicycle: TBicycle) => {
+  let slug = slugify(bicycle.name, { lower: true, strict: true });
+  let counter = 1;
+
+  while (await BicycleModel.findOne({ slug })) {
+    slug = slugify(bicycle.name, { lower: true, strict: true }) + `-${counter}`;
+    counter++;
+  }
+
+  bicycle.slug = slug;
+
+  // Create the bicycle in the database
   const result = await BicycleModel.create(bicycle);
   return result;
 };
+
 const getAllBiCycle = async (query: Record<string, unknown>) => {
   const biCycleQuery = new QueryBuilder(BicycleModel.find({ isDeleted: false}).populate('author'), query)
   .search(bicycleSearchableFields)
@@ -25,7 +38,14 @@ const getAllBiCycle = async (query: Record<string, unknown>) => {
 
 
 const getSingleBiCycleById = async (_id: string) => {
-  const bicycle = await BicycleModel.findOne({ _id, isDeleted: false }).populate('author');
+  const bicycle = await BicycleModel.findById({ _id, isDeleted: false }).populate('author');
+  if (!bicycle){
+    throw new AppError(status.NOT_FOUND, 'Bicycle Not Found')
+  }
+  return bicycle;
+};
+const getSingleBiCycleBySlug = async ( slug: string) => {
+  const bicycle = await BicycleModel.findOne({ slug, isDeleted: false }).populate('author');
   if (!bicycle){
     throw new AppError(status.NOT_FOUND, 'Bicycle Not Found')
   }
@@ -74,4 +94,5 @@ export const BicycleService = {
   getSingleBiCycleById,
   updateSingleBiCycleById,
   deleteSingleBiCycleById,
+  getSingleBiCycleBySlug,
 };

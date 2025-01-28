@@ -10,7 +10,7 @@ export const orderItemValidation = z.object({
 // Zod validation for Order
  const createOrderValidation = z.object({
   body: z.object({
-    userId: z.string(),
+    userId: z.string().optional(),
     items: z.array(orderItemValidation).min(1, { message: 'At least one item is required' }),
     totalAmount: z.number().positive({ message: 'Total amount must be a positive number' }).default(0).optional(),
     discount: z.number().min(0, { message: 'Discount must be a non-negative number' }).default(0).optional(),

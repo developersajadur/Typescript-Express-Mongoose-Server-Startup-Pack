@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import status from 'http-status';
@@ -72,28 +71,27 @@ const changeOrderStatus = catchAsync(async (req, res) => {
 
 // showTotalRevenue
 
-const showTotalRevenue = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const totalRevenue = await OrderService.showTotalRevenue();
-    res.status(200).json({
-      success: true,
-      message: 'Revenue calculated successfully',
-      data: {
-        totalRevenue,
-      },
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: 'Failed to fetch total revenue. Please try again.',
-      error: error.message || 'An unexpected error occurred',
-    });
-  }
-};
+// const showTotalRevenue = async (req: Request, res: Response): Promise<void> => {
+//   try {
+//     const totalRevenue = await OrderService.showTotalRevenue();
+//     res.status(200).json({
+//       success: true,
+//       message: 'Revenue calculated successfully',
+//       data: {
+//         totalRevenue,
+//       },
+//     });
+//   } catch (error: any) {
+//     res.status(500).json({
+//       success: false,
+//       message: 'Failed to fetch total revenue. Please try again.',
+//       error: error.message || 'An unexpected error occurred',
+//     });
+//   }
+// };
 
 export const orderController = {
   createOrderIntoDb,
-  showTotalRevenue,
   getAllOrders,
   changeOrderStatus,
   getSingleOrderById

@@ -13,6 +13,8 @@ router.get('/', bicycleController.getAllBiCycles);
 
 router.get('/:id', bicycleController.getSingleBiCycleById);
 
+router.get('/get-a-product/:slug', bicycleController.getSingleBiCycleBySlug);
+
 router.put('/:id',auth(USER_ROLE.admin), validateRequest(BicycleValidationSchema.updateBicycleValidation), bicycleController.updateSingleBiCycleById);
 
 router.delete('/:id',auth(USER_ROLE.admin), bicycleController.deleteSingleBiCycleById);
