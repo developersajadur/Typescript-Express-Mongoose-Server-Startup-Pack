@@ -1,62 +1,73 @@
-import  { Schema, model } from "mongoose";
-import { TUser } from "./user.interface";
+import { Schema, model } from "mongoose";
 import bcrypt from 'bcrypt';
 import config from "../../config";
+import { TCarts, TUser } from "./user.interface";
 
+// Cart schema definition
+const cartSchema = new Schema<TCarts>({
+  productId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'Bicycle',
+  },
+  orderQuantity: {
+    type: Number,
+    required: true,
+  },
+});
 
+// User schema definition
 const userSchema = new Schema<TUser>(
-    {
-      name: {
-        type: String,
-        required: [true, 'Name is required'],
-        trim: true,
-      },
-      number: {
-        type: String,
-        required: [true, 'Number is required'],
-        match: [/^\d{11}$/, 'Invalid phone number format'],  // Optional: Validate 11-digit numbers
-      },
-      
-      email: {
-        type: String,
-        required: [true, 'Email is required'],
-        unique: true,
-        lowercase: true,
-        match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email address'],
-      },
-      password: {
-        type: String,
-        select: 0,
-        required: [true, 'Password is required'],
-        minlength: [6, 'Password must be at least 6 characters long'],
-      },
-      role: {
-        type: String,
-        enum: ['customer', 'admin'],
-        default: 'customer',
-      },
-      profileImage: {
-        type: String,
-      },
-      isBlocked: {
-        type: Boolean,
-        default: false,
-      },
+  {
+    name: {
+      type: String,
+      required: [true, 'Name is required'],
+      trim: true,
     },
-    {
-      timestamps: true,
-    }
-  );
-  
-  userSchema.pre('save', async function(next){
-    const user = this as TUser;
-    const password = user.password;
-    const hashedPassword = await bcrypt.hash(password, Number(config.salt_rounds));
-    user.password = hashedPassword;
-    next();
-  })
+    number: {
+      type: String,
+      required: [true, 'Number is required'],
+      match: [/^\d{11}$/, 'Invalid phone number format'],  // Optional: Validate 11-digit numbers
+    },
+    email: {
+      type: String,
+      required: [true, 'Email is required'],
+      unique: true,
+      lowercase: true,
+      match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email address'],
+    },
+    password: {
+      type: String,
+      select: 0,
+      required: [true, 'Password is required'],
+      minlength: [6, 'Password must be at least 6 characters long'],
+    },
+    role: {
+      type: String,
+      enum: ['customer', 'admin'],
+      default: 'customer',
+    },
+    profileImage: {
+      type: String,
+    },
+    isBlocked: {
+      type: Boolean,
+      default: false,
+    },
+    carts: [cartSchema],  // Carts field is now optional
+  },
+  {
+    timestamps: true,
+  }
+);
 
+userSchema.pre('save', async function(next) {
+  const user = this as TUser;
+  const password = user.password;
+  const hashedPassword = await bcrypt.hash(password, Number(config.salt_rounds));
+  user.password = hashedPassword;
+  next();
+});
 
-  // Create the Mongoose model
- export const UserModel = model<TUser>('User', userSchema);
-  
+// Create the Mongoose model
+export const UserModel = model<TUser>('User', userSchema);

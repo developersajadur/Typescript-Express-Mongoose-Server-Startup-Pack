@@ -22,6 +22,7 @@ return jwt.verify(token, secret) as JwtPayload;
 
 export const tokenDecoder = (req: Request) => {
   const token = req?.headers?.authorization;
+  // console.log(token);
   if (!token) {
     throw new AppError(status.UNAUTHORIZED, 'You Are Not Authorized');
   }
