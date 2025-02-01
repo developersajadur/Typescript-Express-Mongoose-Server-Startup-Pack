@@ -4,7 +4,6 @@ import { userRoute } from "../modules/User/user.route";
 import { authRoute } from "../modules/Auth/auth.route";
 import { orderRoute } from "../modules/Orders/order.route";
 import { paymentRoutes } from "../modules/Payment/payment.route";
-import { cartRoute } from "../modules/Cart/cart.route";
 
 
 
@@ -26,10 +25,6 @@ const moduleRoutes = [
     {
         path: '/orders',
         route: orderRoute
-    },
-    {
-        path: '/carts',
-        route: cartRoute
     },
     {
         path: '/payments',

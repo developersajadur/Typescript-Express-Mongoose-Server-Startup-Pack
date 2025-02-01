@@ -1,20 +1,8 @@
 import { Schema, model } from "mongoose";
 import bcrypt from 'bcrypt';
 import config from "../../config";
-import { TCarts, TUser } from "./user.interface";
+import { TUser } from "./user.interface";
 
-// Cart schema definition
-const cartSchema = new Schema<TCarts>({
-  productId: {
-    type: Schema.Types.ObjectId,
-    required: true,
-    ref: 'Bicycle',
-  },
-  orderQuantity: {
-    type: Number,
-    required: true,
-  },
-});
 
 // User schema definition
 const userSchema = new Schema<TUser>(
@@ -54,7 +42,6 @@ const userSchema = new Schema<TUser>(
       type: Boolean,
       default: false,
     },
-    carts: [cartSchema],  // Carts field is now optional
   },
   {
     timestamps: true,

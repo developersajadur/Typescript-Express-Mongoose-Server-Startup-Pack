@@ -1,10 +1,5 @@
 import { z } from 'zod';
 
-// Define the Zod schema for cart validation
-const cartSchema = z.object({
-  productId: z.string().min(1, { message: 'Product ID is required' }),  // Assuming productId is a string
-  orderQuantity: z.number().min(1, { message: 'Order quantity must be at least 1' }),
-});
 
 // Define the Zod schema for user validation
 const createUserValidation = z.object({
@@ -18,8 +13,7 @@ const createUserValidation = z.object({
       .min(6, { message: 'Password must be at least 6 characters long' }),
     role: z.enum(['admin', 'customer'], { message: 'Invalid role' }).default('customer'),
     profileImage: z.string().url().optional(),
-    isBlocked: z.boolean().default(false),
-    carts: z.array(cartSchema).optional(),  // Make carts optional
+    isBlocked: z.boolean().default(false), // Make carts optional
     createdAt: z.date().optional(),
     updatedAt: z.date().optional(),
   }),

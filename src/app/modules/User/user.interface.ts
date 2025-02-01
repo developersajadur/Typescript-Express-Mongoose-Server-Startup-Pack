@@ -1,10 +1,5 @@
-import { Types } from "mongoose";
 import { USER_ROLE } from "./user.constant";
 
-export type TCarts = {
-    productId: Types.ObjectId;
-    orderQuantity: number;
-}
 
 export type TUser = {
     name: string;
@@ -14,7 +9,6 @@ export type TUser = {
     role: 'customer' | 'admin';
     profileImage?: string;
     isBlocked: boolean;
-    carts?: TCarts[];
     createdAt?: Date;
     updatedAt?: Date;
 }
