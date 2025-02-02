@@ -2,65 +2,88 @@ import status from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { paymentService } from "./payment.service";
+import AppError from "../../errors/AppError";
+import axios from "axios";
+import config from "../../config";
 import { tokenDecoder } from "../Auth/auth.utils";
+import { UserModel } from "../User/user.model";
 
+// Aamarpay Payment Initiation
+const initiateAamarpayPayment = catchAsync(async (req, res) => {
+  const { total_amount, cus_name, cus_email, cus_phone, tran_id, desc } = req.body;
 
+  if (!total_amount || !cus_name || !cus_email || !cus_phone || !tran_id) {
+    throw new AppError(status.BAD_REQUEST, "Missing required payment fields.");
+  }
 
+  const paymentResponse = await paymentService.initiateAamarpayPayment({
+    total_amount,
+    cus_name,
+    cus_email,
+    cus_phone,
+    tran_id,
+    desc,
+  });
 
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Payment initiated successfully",
+    data: paymentResponse,
+  });
+});
 
-const initiatePayment = catchAsync(async (req, res) => {
-    const { amount, cus_name, cus_email, cus_phone } = req.body;
-    const tran_id = `TXN_${Date.now()}_${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
+// Aamarpay Payment Success Callback
+const paymentSuccessCallback = catchAsync(async (req, res) => {
+  const { tran_id, pay_status, amount } = req.body;
 
-    const payment = await paymentService.initiatePayment({amount, tran_id, cus_name, cus_email, cus_phone})
-    sendResponse(res, {
+  const decoded = tokenDecoder(req);
+  const { userId } = decoded;
+  const user = await UserModel.findById(userId);
+
+  try {
+
+    
+
+    if (verificationResponse.data.status === "success") {
+      const paymentData = {
+        userId: user?._id,
+        totalAmount: amount,
+        paymentGateway: "Aamarpay",
+        paymentStatus: pay_status === "Successful" ? "completed" : "failed",
+        transactionId: tran_id,
+        paymentDate: new Date(),
+      };
+
+      await paymentService.savePayment(paymentData);
+
+      sendResponse(res, {
         statusCode: status.OK,
         success: true,
-        message: 'Payment initiated successfully',
-        data: payment,
-    })
-
-})
-
-
-
-
-
-const createPaymentIntoDb = catchAsync(async (req, res) => {
-
-    const tran_id = `TXN_${Date.now()}`;
-
-    const decoded = tokenDecoder(req)
-    const {userId} = decoded
- 
-    const dataToStore = {
-        userId,
-        tran_id,
-       ...req.body,
+        message: "Payment successful and recorded",
+        data: paymentData,
+      });
+    } else {
+      throw new AppError(status.BAD_REQUEST, "Payment verification failed.");
     }
-    const payment = await paymentService.createPaymentIntoDb(dataToStore)
+  } catch (error) {
+    throw new AppError(status.INTERNAL_SERVER_ERROR, "Error during payment verification.");
+  }
+});
 
-    sendResponse(res, {
-        statusCode: status.OK,
-        success: true,
-        message: 'Payment successful',
-        data: payment,
-    })
-})
-
+// Get all payments
 const getAllPayments = catchAsync(async (req, res) => {
-    const payments =  await paymentService.getAllPayments(req.query)
-    sendResponse(res, {
-        statusCode: status.OK,
-        success: true,
-        message: 'Payments retrieved successfully',
-        data: payments,
-    })
-})
-
+  const payments = await paymentService.getAllPayments(req.query);
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Payments retrieved successfully",
+    data: payments,
+  });
+});
 
 export const paymentController = {
-    createPaymentIntoDb,
-    getAllPayments,
-    initiatePayment
-}
+  getAllPayments,
+  initiateAamarpayPayment,
+  paymentSuccessCallback,
+};

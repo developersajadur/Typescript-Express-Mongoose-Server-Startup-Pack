@@ -2,14 +2,15 @@ import { Router } from "express";
 import { paymentController } from "./payment.controller";
 import auth from "../../middlewares/auth";
 import { USER_ROLE } from "../User/user.constant";
-import validateRequest from "../../middlewares/validateRequest";
-import { paymentValidationSchema } from "./payment.validation";
 
+const router = Router();
 
-const router = Router()
+// Route to get all payments (only for admins)
+router.get('/', auth(USER_ROLE.admin), paymentController.getAllPayments);
 
-router.post('/save-payment', auth(USER_ROLE.customer), validateRequest(paymentValidationSchema.createPaymentValidation), paymentController.createPaymentIntoDb)
-router.get('/',auth(USER_ROLE.admin), paymentController.getAllPayments)
-router.post("/create-payment", auth(USER_ROLE.customer), paymentController.initiatePayment);
+// Route to initiate payment (only for customers)
+router.post('/initiate', auth(USER_ROLE.customer), paymentController.initiateAamarpayPayment);
+
+router.post("/payment/success", paymentController.paymentSuccessCallback);
 
 export const paymentRoutes = router;

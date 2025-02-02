@@ -12,7 +12,7 @@ const userSchema = new Schema<TUser>(
       required: [true, 'Name is required'],
       trim: true,
     },
-    number: {
+    phone: {
       type: String,
       required: [true, 'Number is required'],
       match: [/^\d{11}$/, 'Invalid phone number format'],  // Optional: Validate 11-digit numbers
@@ -37,6 +37,14 @@ const userSchema = new Schema<TUser>(
     },
     profileImage: {
       type: String,
+    },
+    city: {
+      type: String,
+      default: "N/A"
+    },
+    address: {
+      type: String,
+       default: "N/A"
     },
     isBlocked: {
       type: Boolean,

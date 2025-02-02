@@ -2,8 +2,9 @@ import { Router } from "express";
 import { biCycleRoute } from "../modules/Bicycle/bicycle.route";
 import { userRoute } from "../modules/User/user.route";
 import { authRoute } from "../modules/Auth/auth.route";
-import { orderRoute } from "../modules/Orders/order.route";
 import { paymentRoutes } from "../modules/Payment/payment.route";
+import orderRouter from "../modules/order/order.router";
+// import orderRoute from "../modules/Orders/order.route";
 
 
 
@@ -15,7 +16,7 @@ const moduleRoutes = [
         route: biCycleRoute
     },
     {
-        path: '/users',
+        path: '/users', 
         route: userRoute
     },
     {
@@ -23,13 +24,13 @@ const moduleRoutes = [
         route: authRoute
     },
     {
-        path: '/orders',
-        route: orderRoute
+        path: '/order',
+        route: orderRouter
     },
-    {
-        path: '/payments',
-        route: paymentRoutes
-    },
+    // {
+    //     path: '/payments',
+    //     route: paymentRoutes
+    // },
 ]
 
 

@@ -1,5 +1,4 @@
 import { Types } from "mongoose";
-import { TPaymentMethod } from "../Orders/order.interface";
 
 
 export type TPaymentRequest = {
@@ -11,12 +10,13 @@ export type TPaymentRequest = {
   }
 
   export type TPayment = {
-    userId?: Types.ObjectId;
-    orderId: Types.ObjectId;
-    amount: number;
-    transactionId?: string;
-    paymentMethod: TPaymentMethod;
-    currency: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-  }
+    userEmail: string; // User's email (required)
+    totalAmount: number; // Total amount of the payment (required)
+    paymentGateway: string; // The payment gateway used (e.g., Aamarpay) (required)
+    paymentStatus: string; // The payment status (e.g., "pending", "completed") (required)
+    transactionId: string; // Unique transaction ID for the payment (required)
+    paymentDate: Date; // Date of the payment (required)
+    orderId: Types.ObjectId; // Reference to the associated order (required)
+    createdAt?: Date; // Automatically generated createdAt field (optional)
+    updatedAt?: Date; // Automatically generated updatedAt field (optional)
+  };

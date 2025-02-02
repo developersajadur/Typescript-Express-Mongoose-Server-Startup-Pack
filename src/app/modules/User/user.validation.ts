@@ -5,7 +5,7 @@ import { z } from 'zod';
 const createUserValidation = z.object({
   body: z.object({
     name: z.string().min(1, { message: 'Name is required' }),
-    number: z.string().min(1, { message: 'Number is required' }).regex(/^\d{11}$/, { message: 'Invalid phone number format' }),
+    phone: z.string().min(1, { message: 'Number is required' }).regex(/^\d{11}$/, { message: 'Invalid phone number format' }),
     email: z.string()
       .email({ message: 'Please enter a valid email address' })
       .min(1, { message: 'Email is required' }),
@@ -13,6 +13,8 @@ const createUserValidation = z.object({
       .min(6, { message: 'Password must be at least 6 characters long' }),
     role: z.enum(['admin', 'customer'], { message: 'Invalid role' }).default('customer'),
     profileImage: z.string().url().optional(),
+    city: z.string().optional().default('N/A'),
+    address: z.string().optional().default('N/A'),
     isBlocked: z.boolean().default(false), // Make carts optional
     createdAt: z.date().optional(),
     updatedAt: z.date().optional(),

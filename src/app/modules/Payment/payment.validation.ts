@@ -6,7 +6,6 @@ export const createPaymentValidation = z.object({
   orderId: z.string(),
   amount: z.number().positive(),
   transactionId: z.string().min(1).optional(),
-  paymentMethod: z.enum(['stripe', 'aamar_pay', 'cash_on_delivery']),
   currency: z.string().min(1),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
