@@ -6,7 +6,7 @@ export type TUser = {
     _id?: Types.ObjectId;
     name: string;
     email: string;
-    phone: number;
+    phone: number | string;
     password: string;
     role: 'customer' | 'admin';
     profileImage?: string;

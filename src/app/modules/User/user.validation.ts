@@ -5,7 +5,13 @@ import { z } from 'zod';
 const createUserValidation = z.object({
   body: z.object({
     name: z.string().min(1, { message: 'Name is required' }),
-    phone: z.number().min(1, { message: 'Number is required' }),
+    phone: z
+      .union([
+        z.string()
+          .min(1, { message: 'Number is required' })
+          .regex(/^\d{11}$/, { message: 'Phone number must be exactly 11 digits.' }),
+        z.number().min(1, { message: 'Number is required' }) // Apply the min check for number
+      ]),
     email: z.string()
       .email({ message: 'Please enter a valid email address' })
       .min(1, { message: 'Email is required' }),
@@ -23,7 +29,7 @@ const createUserValidation = z.object({
 
 const updateUserValidation = z.object({
   body: z.object({
-    name: z.string().min(1, { message: 'Name is required' }).optional(),
+    name: z.string().optional(),
     // phone: z.number().min(1, { message: 'Number is required' }),
     // email: z
     //   .string()

@@ -13,7 +13,7 @@ const userSchema = new Schema<TUser>(
       trim: true,
     },
     phone: {
-      type: Number,
+      type: String,
       required: [true, 'Number is required'],
       match: [/^\d{11}$/, 'Invalid phone number format'],  // Optional: Validate 11-digit numbers
     },

@@ -10,7 +10,7 @@ import config from "../../config";
 export type TJwtPayload = {
     userId: string;
     email: string;
-    number: string,
+    phone: number | string,
     role: string;
 }
 
@@ -30,7 +30,7 @@ const loginUser = async (payload: TLoginUser): Promise<{ token: string }> => {
       const jwtPayload = {
         userId: user?._id.toString(),
         email: user?.email,
-        number: user.number as string,
+        phone: user.phone ,
         role: user?.role,
       };
 

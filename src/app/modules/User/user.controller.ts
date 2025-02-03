@@ -1,4 +1,3 @@
-import { updateUser } from '@/redux/features/auth/authSlice';
 import status from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
@@ -58,9 +57,29 @@ const updateUser = catchAsync(async (req, res) => {
 
 
 
+const changePassword = catchAsync(async (req, res) => {
+  const decoded = tokenDecoder(req); // Assuming tokenDecoder extracts the user ID from the token
+  const { newPassword, currentPassword } = req.body;
+  const { userId } = decoded;
+
+  // Call the changePassword service
+  const updatedUser = await userService.changePassword(userId, newPassword, currentPassword);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Password updated successfully",
+    data: updatedUser,
+  });
+});
+
+
+
+
 export const userController = {
   createUserIntoDb,
   getAllUsers,
   getSingleUser,
-  updateUser
+  updateUser,
+  changePassword
 };
