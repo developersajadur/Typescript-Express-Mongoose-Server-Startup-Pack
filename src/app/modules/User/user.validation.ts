@@ -5,7 +5,7 @@ import { z } from 'zod';
 const createUserValidation = z.object({
   body: z.object({
     name: z.string().min(1, { message: 'Name is required' }),
-    phone: z.string().min(1, { message: 'Number is required' }).regex(/^\d{11}$/, { message: 'Invalid phone number format' }),
+    phone: z.number().min(1, { message: 'Number is required' }),
     email: z.string()
       .email({ message: 'Please enter a valid email address' })
       .min(1, { message: 'Email is required' }),
@@ -24,19 +24,21 @@ const createUserValidation = z.object({
 const updateUserValidation = z.object({
   body: z.object({
     name: z.string().min(1, { message: 'Name is required' }).optional(),
-    number: z.string().min(1, { message: 'Number is required' }).regex(/^\d{11}$/, { message: 'Invalid phone number format' }).optional(),
-    email: z
-      .string()
-      .email({ message: 'Please enter a valid email address' })
-      .min(1, { message: 'Email is required' })
-      .optional(),
-    password: z
-      .string()
-      .min(6, { message: 'Password must be at least 6 characters long' })
-      .optional(),
-    role: z.enum(['user', 'customer'], { message: 'Invalid role' }).optional(),
+    // phone: z.number().min(1, { message: 'Number is required' }),
+    // email: z
+    //   .string()
+    //   .email({ message: 'Please enter a valid email address' })
+    //   .min(1, { message: 'Email is required' })
+    //   .optional(),
+    // password: z
+    //   .string()
+    //   .min(6, { message: 'Password must be at least 6 characters long' })
+    //   .optional(),
+    // role: z.enum(['user', 'customer'], { message: 'Invalid role' }).optional(),
+    city: z.string().optional().default('N/A').optional(),
+    address: z.string().optional().default('N/A').optional(),
     profileImage: z.string().url().optional(),
-    isBlocked: z.boolean().default(false).optional(),
+    // isBlocked: z.boolean().default(false).optional(),
     updatedAt: z.date().optional(),
   }),
 });

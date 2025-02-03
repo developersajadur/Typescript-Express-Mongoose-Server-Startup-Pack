@@ -1,7 +1,9 @@
+import { updateUser } from '@/redux/features/auth/authSlice';
 import status from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { userService } from "./user.service";
+import { tokenDecoder } from "../Auth/auth.utils";
 
 const createUserIntoDb = catchAsync(async (req, res) => {
   const user = await userService.createUserIntoDb(req?.body);
@@ -9,7 +11,7 @@ const createUserIntoDb = catchAsync(async (req, res) => {
     _id: user._id,
     name: user.name,
     email: user.email,
-    number: user.number,
+    phone: user.phone,
     role: user.role,
   };
   sendResponse(res, {
@@ -30,8 +32,35 @@ const getAllUsers = catchAsync(async (req, res) => {
   });
 });
 
+const getSingleUser = catchAsync(async(req, res) => {
+  const user = await userService.getSingleUser(req?.params.id);
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: 'User retrieved successfully',
+    data: user,
+  });
+})
+
+const updateUser = catchAsync(async (req, res) => {
+  const decoded = tokenDecoder(req);
+  const { userId } = decoded;
+
+  const updatedUser = await userService.updateUser(userId, req.body);
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Profile updated successfully",
+    data: updatedUser,
+  });
+});
+
+
 
 export const userController = {
   createUserIntoDb,
   getAllUsers,
+  getSingleUser,
+  updateUser
 };

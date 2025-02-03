@@ -10,6 +10,8 @@ const router = Router()
 
 router.post('/register', validateRequest(UserValidationSchema.createUserValidation), userController.createUserIntoDb)
 router.get('/',auth(USER_ROLE.admin), userController.getAllUsers)
+router.get('/user/:id',auth(USER_ROLE.customer, USER_ROLE.admin), userController.getSingleUser)
+router.put('/update-user',auth(USER_ROLE.customer, USER_ROLE.admin), validateRequest(UserValidationSchema.updateUserValidation), userController.updateUser)
 
 
 export const userRoute = router;

@@ -8,7 +8,7 @@ import { orderService } from "./order.service";
 import httpStatus from "http-status";
 
 const createOrder = catchAsync(async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   // const user = (req as any).user;
   const decoded = tokenDecoder(req);
   const {userId} = decoded;

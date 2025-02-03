@@ -10,32 +10,53 @@ const createOrder = async (
   payload: { products: { product: string; quantity: number }[] },
   client_ip: string
 ) => {
-  // console.log(user.userId, 'user');
-  if (!payload?.products?.length)
+  if (!payload?.products?.length) {
     throw new AppError(httpStatus.NOT_ACCEPTABLE, "Order is not specified");
+  }
 
   const products = payload.products;
-  // console.log(products);
-
   let totalPrice = 0;
+
+  // Fetch product details & update stock
   const productDetails = await Promise.all(
     products.map(async (item) => {
       const product = await BicycleModel.findById(item.product);
-      if (product) {
-        const subtotal = product ? (product.price || 0) * item.quantity : 0;
-        totalPrice += subtotal;
-        return item;
+      if (!product) {
+        throw new AppError(httpStatus.NOT_FOUND, `Product not found`);
       }
+      if (!product.inStock || product.stockQuantity < item.quantity) {
+        throw new AppError(
+          httpStatus.NOT_ACCEPTABLE,
+          `Not enough stock for ${product.name}`
+        );
+      }
+
+      // Deduct stock
+      product.stockQuantity -= item.quantity;
+
+      // If stock reaches 0, set inStock to false
+      if (product.stockQuantity === 0) {
+        product.inStock = false;
+      }
+
+      // Save updated product stock
+      await product.save();
+
+      const subtotal = (product.price || 0) * item.quantity;
+      totalPrice += subtotal;
+
+      return { product: product._id, quantity: item.quantity };
     })
   );
 
-  let order = await Order.create({
-    user,
+  // Create the order
+  const order = await Order.create({
+    user: user._id,
     products: productDetails,
     totalPrice,
   });
 
-  // payment integration
+  // Payment integration
   const shurjopayPayload = {
     amount: totalPrice,
     order_id: order._id,
@@ -51,16 +72,20 @@ const createOrder = async (
   const payment = await orderUtils.makePaymentAsync(shurjopayPayload);
 
   if (payment?.transactionStatus) {
-    order = await order.updateOne({
-      transaction: {
-        id: payment.sp_order_id,
-        transactionStatus: payment.transactionStatus,
+    await Order.findByIdAndUpdate(order._id, {
+      $set: {
+        transaction: {
+          id: payment.sp_order_id,
+          transactionStatus: payment.transactionStatus,
+        },
       },
     });
   }
 
   return payment.checkout_url;
 };
+
+
 
 const getOrders = async () => {
   // Using `.lean()` to return plain JavaScript objects
