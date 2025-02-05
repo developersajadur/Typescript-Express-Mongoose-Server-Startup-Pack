@@ -4,6 +4,7 @@ import AppError from "../../errors/AppError";
 import { orderUtils } from "./order.utils";
 import { TUser } from "../User/user.interface";
 import { BicycleModel } from "../Bicycle/bicycle.model";
+import QueryBuilder from "../../builders/QueryBuilder";
 
 const createOrder = async (
   user: TUser,
@@ -87,10 +88,15 @@ const createOrder = async (
 
 
 
-const getOrders = async () => {
-  // Using `.lean()` to return plain JavaScript objects
-  const data = await Order.find().lean();
-  return data;
+const getOrders = async (query: Record<string, unknown>) => {
+  const orderQuery = new QueryBuilder(Order.find(query), query)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+    const result = await orderQuery.modelQuery;
+    return result;
 };
 
 const verifyPayment = async (order_id: string) => {
@@ -124,6 +130,41 @@ const verifyPayment = async (order_id: string) => {
 };
 
 
+const updateOrderStatus = async (orderId: string, status: { status: "Pending" | "Paid" | "Shipped" | "Completed" | "Cancelled" }) => {
+  // console.log(status.status);  // Log the status correctly
+  
+  // Find the order
+  const order = await Order.findById(orderId);
+  if (!order) {
+    throw new AppError(httpStatus.NOT_FOUND, "Order not found");
+  }
+
+  // Define allowed transitions
+  const allowedTransitions: Record<string, string[]> = {
+    "Pending": ["Paid", "Cancelled"],
+    "Paid": ["Shipped", "Cancelled"],
+    "Shipped": ["Completed", "Cancelled"],
+    "Completed": [],
+    "Cancelled": []
+  };
+
+  // Get the current status and check if the status transition is allowed
+  const currentStatus = order.status;
+  if (!allowedTransitions[currentStatus].includes(status.status)) {
+    throw new AppError(httpStatus.BAD_REQUEST, `Cannot change status from "${currentStatus}" to "${status.status}"`);
+  }
+
+  // Update the order status
+  const updatedOrder = await Order.findByIdAndUpdate(orderId, { status: status.status }, { new: true });
+  if (!updatedOrder) {
+    throw new AppError(httpStatus.NOT_FOUND, "Order not found");
+  }
+
+  return updatedOrder;
+};
+
+
+
 const getOrdersForMe = async(userId:string) => {
   const data = await Order.find({ user: userId }).lean();
   return data;
@@ -133,5 +174,6 @@ export const orderService = {
   createOrder,
   getOrders,
   verifyPayment,
-  getOrdersForMe
+  getOrdersForMe,
+  updateOrderStatus
 };

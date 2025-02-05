@@ -54,6 +54,7 @@ const getSingleBiCycleBySlug = async ( slug: string) => {
 
 
 const updateSingleBiCycleById = async (_id: string, updatedBicycle: TBicycle) => {
+  // console.log(updatedBicycle);
   // console.log(_id, updatedBicycle);
   try {
     const bicycle = await BicycleModel.findOne({ _id, isDeleted: false });

@@ -31,18 +31,27 @@ const createOrder = catchAsync(async (req, res) => {
   });
 });
 
-const getOrders = catchAsync(async (req, res) => {
-  const order = await orderService.getOrders();
 
-  // Ensure we return only serializable objects
-  const ordersResponse = JSON.parse(JSON.stringify(order));
+const updateOrderStatus = catchAsync(async (req, res) => {
+  const order = await orderService.updateOrderStatus(req.params.orderId, req.body);
+
 
   sendResponse(res, {
     success: true,
-    statusCode: httpStatus.CREATED,
-    message: "Order retrieved successfully",
-    data: ordersResponse,
+    statusCode: httpStatus.OK,
+    message: "Order status updated successfully",
+    data: order,
   });
+})
+
+const getOrders = catchAsync(async (req, res) => {
+  const orders = await orderService.getOrders(req.query);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Orders retrieved successfully",
+    data: orders,
+  })
 });
 
 const verifyPayment = catchAsync(async (req, res) => {
@@ -73,4 +82,4 @@ const getOrdersForMe = catchAsync(async (req, res) => {
 })
 
 
-export const orderController = { createOrder, verifyPayment, getOrders, getOrdersForMe };
+export const orderController = { createOrder, verifyPayment, getOrders, getOrdersForMe, updateOrderStatus };

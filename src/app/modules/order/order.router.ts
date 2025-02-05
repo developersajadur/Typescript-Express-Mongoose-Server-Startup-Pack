@@ -6,11 +6,12 @@ const orderRouter = Router();
 
 orderRouter.get("/verify", auth(USER_ROLE.customer), orderController.verifyPayment);
 
-orderRouter
-  .route("/")
-  .post(auth(USER_ROLE.customer), orderController.createOrder)
-  .get(auth(USER_ROLE.customer), orderController.getOrders);
+orderRouter.post("/",auth(USER_ROLE.customer), orderController.createOrder)
 
-  orderRouter.get('/get-my-orders',auth(USER_ROLE.customer), orderController.getOrdersForMe);
+orderRouter.get(('/'), auth(USER_ROLE.admin), orderController.getOrders);
+
+orderRouter.get('/get-my-orders',auth(USER_ROLE.customer), orderController.getOrdersForMe);
+
+orderRouter.post('/change-status/:orderId', auth(USER_ROLE.admin), orderController.updateOrderStatus);
 
 export default orderRouter;
