@@ -123,8 +123,15 @@ const verifyPayment = async (order_id: string) => {
   return verifiedPayment;
 };
 
+
+const getOrdersForMe = async(userId:string) => {
+  const data = await Order.find({ user: userId }).lean();
+  return data;
+}
+
 export const orderService = {
   createOrder,
   getOrders,
   verifyPayment,
+  getOrdersForMe
 };

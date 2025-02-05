@@ -59,4 +59,18 @@ const verifyPayment = catchAsync(async (req, res) => {
   });
 });
 
-export const orderController = { createOrder, verifyPayment, getOrders };
+
+const getOrdersForMe = catchAsync(async (req, res) => {
+  const decoded = tokenDecoder(req);
+  const {userId} = decoded;
+  const response = await orderService.getOrdersForMe(userId);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Orders retrieved successfully",
+    data: response,
+  })
+})
+
+
+export const orderController = { createOrder, verifyPayment, getOrders, getOrdersForMe };

@@ -53,24 +53,26 @@ const getSingleBiCycleBySlug = async ( slug: string) => {
 };
 
 
-
 const updateSingleBiCycleById = async (_id: string, updatedBicycle: TBicycle) => {
+  // console.log(_id, updatedBicycle);
   try {
     const bicycle = await BicycleModel.findOne({ _id, isDeleted: false });
-    if (!bicycle){
-      throw new AppError(status.NOT_FOUND, 'Bicycle Not Found')
+    if (!bicycle) {
+      throw new AppError(status.NOT_FOUND, 'Bicycle Not Found');
     }
-
   } catch (error: any) {
-    throw new AppError(status.BAD_REQUEST, error.message)
+    throw new AppError(status.BAD_REQUEST, error.message);
   }
+
   const result = await BicycleModel.findByIdAndUpdate(
     _id,
     { ...updatedBicycle, updatedAt: new Date() },
-    { new: true },
+    { new: true }
   );
+
   return result;
 };
+
 
 const deleteSingleBiCycleById = async (_id: string) => {
   try {

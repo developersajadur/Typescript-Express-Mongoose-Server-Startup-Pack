@@ -11,4 +11,6 @@ orderRouter
   .post(auth(USER_ROLE.customer), orderController.createOrder)
   .get(auth(USER_ROLE.customer), orderController.getOrders);
 
+  orderRouter.get('/get-my-orders',auth(USER_ROLE.customer), orderController.getOrdersForMe);
+
 export default orderRouter;
