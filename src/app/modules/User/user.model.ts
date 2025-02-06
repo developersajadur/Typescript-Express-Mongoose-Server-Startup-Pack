@@ -1,8 +1,7 @@
-import { Schema, model } from "mongoose";
+import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
-import config from "../../config";
-import { TUser } from "./user.interface";
-
+import config from '../../config';
+import { TUser } from './user.interface';
 
 // User schema definition
 const userSchema = new Schema<TUser>(
@@ -15,7 +14,7 @@ const userSchema = new Schema<TUser>(
     phone: {
       type: String,
       required: [true, 'Number is required'],
-      match: [/^\d{11}$/, 'Invalid phone number format'],  // Optional: Validate 11-digit numbers
+      match: [/^\d{11}$/, 'Invalid phone number format'], // Optional: Validate 11-digit numbers
     },
     email: {
       type: String,
@@ -40,11 +39,11 @@ const userSchema = new Schema<TUser>(
     },
     city: {
       type: String,
-      default: "N/A"
+      default: 'N/A',
     },
     address: {
       type: String,
-       default: "N/A"
+      default: 'N/A',
     },
     isBlocked: {
       type: Boolean,
@@ -53,13 +52,16 @@ const userSchema = new Schema<TUser>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
   const user = this as TUser;
   const password = user.password;
-  const hashedPassword = await bcrypt.hash(password, Number(config.salt_rounds));
+  const hashedPassword = await bcrypt.hash(
+    password,
+    Number(config.salt_rounds),
+  );
   user.password = hashedPassword;
   next();
 });

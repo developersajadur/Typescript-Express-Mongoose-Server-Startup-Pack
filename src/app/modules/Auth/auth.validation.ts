@@ -11,4 +11,4 @@ const loginUserValidation = z.object({
 
 export const AuthValidationSchema = {
   loginUserValidation,
-  };
+};

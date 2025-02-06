@@ -1,18 +1,18 @@
-import { model, Schema } from "mongoose";
-import { IOrder } from "./order.interface";
+import { model, Schema } from 'mongoose';
+import { IOrder } from './order.interface';
 
 const OrderSchema = new Schema<IOrder>(
   {
     user: {
       type: Schema.Types.ObjectId,
-      ref: "Product",
+      ref: 'Product',
       required: true,
     },
     products: [
       {
         product: {
           type: Schema.Types.ObjectId,
-          ref: "Product",
+          ref: 'Product',
           required: true,
         },
         quantity: {
@@ -27,8 +27,8 @@ const OrderSchema = new Schema<IOrder>(
     },
     status: {
       type: String,
-      enum: ["Pending", "Paid", "Shipped", "Completed", "Cancelled"],
-      default: "Pending",
+      enum: ['Pending', 'Paid', 'Shipped', 'Completed', 'Cancelled'],
+      default: 'Pending',
     },
     transaction: {
       id: String,
@@ -42,9 +42,9 @@ const OrderSchema = new Schema<IOrder>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-const Order = model<IOrder>("Order", OrderSchema);
+const Order = model<IOrder>('Order', OrderSchema);
 
 export default Order;

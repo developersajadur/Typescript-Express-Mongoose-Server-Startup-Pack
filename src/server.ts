@@ -12,7 +12,7 @@ async function main() {
   try {
     await mongoose.connect(database_url as string);
 
-   server = app.listen(port, () => {
+    server = app.listen(port, () => {
       console.log(`App Is Listening On Port ${port}`);
     });
   } catch (error) {
@@ -21,7 +21,6 @@ async function main() {
 }
 
 main();
-
 
 process.on('unhandledRejection', (err) => {
   console.log(`😈 unhandledRejection is detected , shutting down ...`, err);

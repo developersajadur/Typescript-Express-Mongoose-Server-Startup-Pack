@@ -10,15 +10,15 @@ import status from 'http-status';
 export const createToken = (
   jwtPayload: TJwtPayload,
   secret: string,
-  expiresIn: any
+  expiresIn: any,
 ) => {
   return jwt.sign(jwtPayload, secret, {
-    expiresIn: expiresIn
+    expiresIn: expiresIn,
   });
 };
 export const verifyToken = (token: string, secret: string) => {
-return jwt.verify(token, secret) as JwtPayload;
-}
+  return jwt.verify(token, secret) as JwtPayload;
+};
 
 export const tokenDecoder = (req: Request) => {
   const token = req?.headers?.authorization;
@@ -26,6 +26,9 @@ export const tokenDecoder = (req: Request) => {
   if (!token) {
     throw new AppError(status.UNAUTHORIZED, 'You Are Not Authorized');
   }
-   const decoded = verifyToken(token as string, config.jwt_token_secret as string)
-   return decoded;
-}
+  const decoded = verifyToken(
+    token as string,
+    config.jwt_token_secret as string,
+  );
+  return decoded;
+};

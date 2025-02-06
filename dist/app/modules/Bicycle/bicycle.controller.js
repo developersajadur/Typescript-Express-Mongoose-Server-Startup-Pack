@@ -12,152 +12,77 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BicycleController = void 0;
+exports.bicycleController = void 0;
+const http_status_1 = __importDefault(require("http-status"));
+const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const bicycle_service_1 = require("./bicycle.service");
-const bicycle_validation_1 = __importDefault(require("./bicycle.validation"));
-const zod_1 = require("zod");
-// create product
-const createBicycle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const BicycleData = yield req.body;
-        // data validation using zod
-        const zodParsedData = bicycle_validation_1.default.parse(BicycleData);
-        const result = yield bicycle_service_1.BicycleService.createBicycleDb(zodParsedData);
-        res.status(200).json({
-            message: 'Bicycle created successfully',
-            success: true,
-            data: result,
-        });
-    }
-    catch (error) {
-        // Handle validation errors
-        if (error instanceof zod_1.z.ZodError) {
-            res.status(400).json({
-                message: 'Validation failed',
-                success: false,
-                error: {
-                    name: error.name,
-                    errors: error.errors.reduce((acc, err) => {
-                        acc[err.path[0]] = {
-                            message: err.message,
-                            name: 'ValidatorError',
-                            properties: {
-                                message: err.message,
-                            },
-                            path: err.path,
-                            value: err.input,
-                        };
-                        return acc;
-                    }, {}),
-                },
-            });
-        }
-        else {
-            res.status(500).json({
-                message: 'Something went wrong',
-                success: false,
-                error: error.message,
-            });
-        }
-    }
-});
-// find  product
-const findAllBiCycle = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const searchTerm = req.query.searchTerm;
-        let filter = {};
-        if (searchTerm) {
-            // Search bicycles based on searchTerm
-            filter = {
-                $or: [
-                    { name: { $regex: searchTerm, $options: 'i' } },
-                    { brand: { $regex: searchTerm, $options: 'i' } },
-                    { type: { $regex: searchTerm, $options: 'i' } },
-                ],
-            };
-        }
-        // Get bicycles either based on the filter or all
-        const bicycles = yield bicycle_service_1.BicycleService.getAllBiCycle(filter);
-        res.status(200).json({
-            success: true,
-            message: 'Bicycles retrieved successfully',
-            data: bicycles,
-        });
-    }
-    catch (error) {
-        res.status(404).json({
-            success: false,
-            message: 'Failed to find bicycles. Please try again.',
-            error: error.message || 'An unexpected error occurred',
-        });
-        res.status(404).json({
-            success: false,
-            message: 'An unknown error occurred.',
-        });
-    }
-});
-// get a single bicycle
-const findBiCycleById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const productId = req.params.productId;
-        const result = yield bicycle_service_1.BicycleService.getSingleBiCycleById(productId);
-        res.status(200).json({
-            success: true,
-            message: 'Bicycle retrieved successfully',
-            data: result,
-        });
-    }
-    catch (error) {
-        res.status(404).json({
-            success: false,
-            message: 'Failed to find bicycle. Please try again.',
-            error: error.message || 'An unexpected error occurred',
-        });
-    }
-});
-// update a bicycle
-const updateBiCycleById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const productId = req.params.productId;
-        const updatedData = req.body;
-        const result = yield bicycle_service_1.BicycleService.updateBiCycleById(productId, updatedData);
-        res.status(200).json({
-            success: true,
-            message: 'Bicycle updated successfully',
-            data: result,
-        });
-    }
-    catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Failed to update bicycle. Please try again.',
-            error: error.message || 'An unexpected error occurred',
-        });
-    }
-});
-// delete a bicycle
-const deleteBiCycleById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const productId = req.params.productId;
-        yield bicycle_service_1.BicycleService.deleteBiCycleById(productId);
-        res.status(200).json({
-            success: true,
-            message: 'Bicycle deleted successfully',
-            data: {},
-        });
-    }
-    catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Failed to delete bicycle. Please try again.',
-            error: error.message || 'An unexpected error occurred',
-        });
-    }
-});
-exports.BicycleController = {
+const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
+const auth_utils_1 = require("../Auth/auth.utils");
+const createBicycle = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const decoded = (0, auth_utils_1.tokenDecoder)(req);
+    const { userId } = decoded;
+    const bicycle = req.body;
+    const dataToStore = Object.assign(Object.assign({}, bicycle), { author: userId });
+    const result = yield bicycle_service_1.BicycleService.createBicycleIntoDb(dataToStore);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Bicycle is created successfully',
+        data: result,
+    });
+}));
+const getAllBiCycles = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const bicycles = yield bicycle_service_1.BicycleService.getAllBiCycle(req.query);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Bicycles retrieved successfully',
+        data: bicycles,
+    });
+}));
+const getSingleBiCycleById = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const bicycle = yield bicycle_service_1.BicycleService.getSingleBiCycleById(req.params.id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Bicycle retrieved successfully',
+        data: bicycle,
+    });
+}));
+const getSingleBiCycleBySlug = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const bicycle = yield bicycle_service_1.BicycleService.getSingleBiCycleBySlug(req.params.slug);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Bicycle retrieved successfully',
+        data: bicycle,
+    });
+}));
+const updateSingleBiCycleById = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const updatedBicycle = yield bicycle_service_1.BicycleService.updateSingleBiCycleById((_a = req === null || req === void 0 ? void 0 : req.params) === null || _a === void 0 ? void 0 : _a.id, req === null || req === void 0 ? void 0 : req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Bicycle updated successfully',
+        data: updatedBicycle,
+    });
+}));
+const deleteSingleBiCycleById = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    yield bicycle_service_1.BicycleService.deleteSingleBiCycleById((_a = req === null || req === void 0 ? void 0 : req.params) === null || _a === void 0 ? void 0 : _a.id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Bicycle deleted successfully',
+        data: null,
+    });
+}));
+exports.bicycleController = {
     createBicycle,
-    findAllBiCycle,
-    findBiCycleById,
-    updateBiCycleById,
-    deleteBiCycleById,
+    getAllBiCycles,
+    getSingleBiCycleById,
+    updateSingleBiCycleById,
+    deleteSingleBiCycleById,
+    getSingleBiCycleBySlug,
 };

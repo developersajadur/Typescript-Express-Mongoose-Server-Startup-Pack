@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import status from 'http-status';
-import {RequestHandler } from 'express';
+import { RequestHandler } from 'express';
 
 const notFound: RequestHandler = (req, res, next) => {
   res.status(status.NOT_FOUND).json({
@@ -13,8 +13,6 @@ const notFound: RequestHandler = (req, res, next) => {
 };
 
 export default notFound;
-
-
 
 // res.status(httpStatus.NOT_FOUND).json({
 //     success: false,

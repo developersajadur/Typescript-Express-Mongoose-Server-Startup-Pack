@@ -11,7 +11,6 @@ export default {
   jwt_token_secret: process.env.JWT_TOKEN_SECRET,
   jwt_refresh_expires_in: process.env.JWT_TOKEN_EXPIRES_IN,
 
-  
   sp_endpoint: process.env.SP_ENDPOINT,
   sp_username: process.env.SP_USERNAME,
   sp_password: process.env.SP_PASSWORD,

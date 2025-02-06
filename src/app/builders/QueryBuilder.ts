@@ -28,36 +28,35 @@ class QueryBuilder<T> {
 
   filter() {
     const queryObj = { ...this.query }; // copy
-  
+
     // Filtering
     const excludeFields = ['search', 'sort', 'limit', 'page', 'fields'];
     excludeFields.forEach((el) => delete queryObj[el]);
-  
+
     // Handle minPrice and maxPrice filtering
     if (queryObj.minPrice || queryObj.maxPrice) {
       const priceQuery: Record<string, any> = {};
-      
+
       if (queryObj.minPrice) {
         priceQuery['$gte'] = queryObj.minPrice; // minPrice filter
         delete queryObj.minPrice;
       }
-  
+
       if (queryObj.maxPrice) {
         priceQuery['$lte'] = queryObj.maxPrice; // maxPrice filter
         delete queryObj.maxPrice;
       }
-  
+
       // If price filter exists, add to the query
       if (Object.keys(priceQuery).length > 0) {
         queryObj['price'] = priceQuery;
       }
     }
-  
+
     this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
-  
+
     return this;
   }
-  
 
   sort() {
     const sort =
@@ -73,7 +72,7 @@ class QueryBuilder<T> {
     const skip = (page - 1) * limit;
 
     this.modelQuery = this.modelQuery.skip(skip).limit(limit);
- 
+
     return this;
   }
 
