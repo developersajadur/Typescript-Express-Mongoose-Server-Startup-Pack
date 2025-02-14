@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import status from 'http-status';
 import AppError from '../../errors/AppError';
-import { UserModel } from '../User/user.model';
+import { UserModel } from '../user/user.model';
 import { TLoginUser } from './auth.interface';
 import bcrypt from 'bcrypt';
 import { createToken } from './auth.utils';
@@ -10,7 +10,6 @@ import config from '../../config';
 export type TJwtPayload = {
   userId: string;
   email: string;
-  phone: number | string;
   role: string;
 };
 
@@ -31,14 +30,13 @@ const loginUser = async (payload: TLoginUser): Promise<{ token: string }> => {
   const jwtPayload = {
     userId: user?._id.toString(),
     email: user?.email,
-    phone: user.phone,
     role: user?.role,
   };
 
   const token = createToken(
     jwtPayload,
     config.jwt_token_secret as string,
-    config.jwt_refresh_expires_in as any,
+    config.jwt_token_expires_in as any,
   );
 
   return { token };

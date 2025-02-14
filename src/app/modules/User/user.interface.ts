@@ -17,13 +17,3 @@ export type TUser = {
 };
 
 export type TUserRole = keyof typeof USER_ROLE;
-
-// name: string;
-// email: string;
-// password: string;
-// role: UserRole;
-// phone?: string;
-// address?: string;
-// city?: string;
-// createdAt: Date;
-// updatedAt: Date;

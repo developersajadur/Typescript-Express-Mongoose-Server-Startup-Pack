@@ -1,5 +1,5 @@
 {
-  "name": "l2_assainment_2",
+  "name": "server",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -27,9 +27,7 @@
     "http-status": "^2.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.2",
-    "shurjopay": "^0.12.1",
     "slugify": "^1.6.6",
-    "stripe": "^17.6.0",
     "uuid": "^11.0.5",
     "zod": "^3.23.8"
   },

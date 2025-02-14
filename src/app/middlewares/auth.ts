@@ -4,9 +4,9 @@
 import status from 'http-status';
 import AppError from '../errors/AppError';
 import catchAsync from '../utils/catchAsync';
-import { tokenDecoder } from '../modules/Auth/auth.utils';
-import { UserModel } from '../modules/User/user.model';
-import { TUserRole } from '../modules/User/user.interface';
+import { tokenDecoder } from '../modules/auth/auth.utils';
+import { UserModel } from '../modules/user/user.model';
+import { TUserRole } from '../modules/user/user.interface';
 import { JwtPayload } from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
 
